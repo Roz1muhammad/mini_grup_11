@@ -3,7 +3,7 @@ init-env:
 act-env:
 	. env/bin/activate
 i:
-	pip install --upgrade pip setuptools wheel && pip install -r requirements.txt
+	pip install --upgrade pip && pip install -r requirements.txt
 mig:
 	make migration && make migrate
 cru:
@@ -11,17 +11,15 @@ cru:
 test:
 	python3 manage.py test
 run-asgi:
-	uvicorn core.asgi:application --host 0.0.0.0 --port 1024 --reload
-run-wsgi:
-	gunicorn core.wsgi:application --bind 0.0.0.0:1024
+	uvicorn core.asgi:application --host 0.0.0.0 --port 1034 --reload
 run:
-	python manage.py runserver 0.0.0.0:1024
+	python manage.py runserver 0.0.0.0:1034
 
 #others
 git-rm-idea:
 	git rm -r --cached .idea/
 collect:
-	python manage.py collectstatic --no-input
+	python manage.py collectstatic --noinput
 rm-static:
 	rm -rf staticfiles/
 migration:
@@ -29,7 +27,7 @@ migration:
 migrate:
 	python3 manage.py migrate
 startapp:
-	python manage.py startapp $(name)
+	python manage.py startapp $(name) && mv $(name) apps/$(name)
 clear-linux:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete && find . -path "*/migrations/*.pyc"  -delete
 clear-windows:
@@ -43,4 +41,19 @@ no-venv:
 	rm -rf env/ venv/ .venv/
 re-mig:
 	make no-sqlite-db && make clear-linux && make re-django & make i && make mig && make cru && make collect && make test && make run-asgi
-	
+run-wsgi:
+	gunicorn core.wsgi:application --bind 0.0.0.0:1034
+tunnel:
+	jprq http 1034 -s escape-api
+open-bash:
+	sudo docker exec -it escape_api bash
+down:
+	sudo docker compose down -v
+up:
+	sudo docker compose up --build
+logs:
+	sudo docker compose logs
+restart:
+	sudo docker rm -f escape_api escape_nginx escape_redis & make down & make up
+seed_languages:
+	python manage.py seed_languages

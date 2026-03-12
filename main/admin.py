@@ -10,7 +10,7 @@ from .models import (
     ProductImage,
     Category,
     ProductCategory,
-    AppUser,
+    User,
     Contact,
     Story
 )
@@ -92,7 +92,7 @@ registered_models = [
     ProductImage,
     Category,
     ProductCategory,
-    AppUser,
+    User,
     Contact,
     Story
 ]
