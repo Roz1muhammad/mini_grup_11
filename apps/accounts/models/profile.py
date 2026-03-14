@@ -12,24 +12,12 @@ class Profile(BaseModel):
         verbose_name=_("User"),
         help_text=_("The user account associated with this profile"),
     )
-    is_location_enabled = models.BooleanField(
-        verbose_name=_("Location Enabled"),
-        default=False,
-        help_text=_("Whether the user has enabled location tracking"),
-    )
     avatar = models.ImageField(
         verbose_name=_("Avatar"),
         upload_to="avatars/",
         blank=True,
         null=True,
         help_text=_("The profile avatar image"),
-    )
-    theme = models.CharField(
-        verbose_name=_("Theme"),
-        max_length=20,
-        choices=Themes.choices,
-        default=Themes.SYSTEM,
-        help_text=_("The theme preference for the app"),
     )
     app_language = models.ForeignKey(
         to="accounts.Language",
